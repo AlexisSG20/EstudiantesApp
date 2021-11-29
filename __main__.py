@@ -1,11 +1,11 @@
-from src.modelo.seccion import Cancion
-from src.modelo.profesor import Interprete
-from src.modelo.estudiante import Album, Medio
+from src.modelo.seccion import Seccion
+from src.modelo.profesor import Profesor
+from src.modelo.estudiante import Estudiante, Medio
 from src.modelo.declarative_base import Session, engine, Base
 from src.logica.destacados import Coleccion
 
 
-def anadir_album (titulo , anio , descripcion , medio) :
+def anadir_estudiante (ApellidoPaterno , ApellidoMaterno , Nombres , medio) :
    # Crea la BD
    Base.metadata.create_all ( engine )
 
@@ -13,13 +13,13 @@ def anadir_album (titulo , anio , descripcion , medio) :
    session = Session ( )
    coleccion = Coleccion ( )
 
-   if coleccion.agregar_album ( titulo , anio , descripcion , medio ) :
-      print ( f"Se añadio el titulo: {titulo}" )
+   if coleccion.agregar_estudiante ( ApellidoPaterno , ApellidoMaterno , Nombres , medio ) :
+      print ( f"Se añadio el estudiante: {ApellidoPaterno} {ApellidoMaterno} {Nombres}" )
    else :
-      print ( f"El título: {titulo}, ya existe" )
+      print ( f"El alumno: {ApellidoPaterno} {ApellidoMaterno} {Nombres}, ya existe" )
    session.close()
 
-def editar_album (album_id,titulo , anio , descripcion , medio) :
+def editar_estudiante (estudiante_id, ApellidoPaterno ,  ApellidoMaterno , Nombres , medio) :
    # Crea la BD
    Base.metadata.create_all ( engine )
 
@@ -27,15 +27,15 @@ def editar_album (album_id,titulo , anio , descripcion , medio) :
    session = Session ( )
    coleccion = Coleccion ( )
 
-   if coleccion.editar_album ( album_id , titulo , anio , descripcion , medio ) :
-      print ( f"Se modifico el album con id: {album_id}" )
+   if coleccion.editar_estudiante ( estudiante_id , ApellidoPaterno , ApellidoMaterno , Nombres , medio ) :
+      print ( f"Se modifico el album con id: {estudiante_id}" )
    else :
-      print ( f"El nuevo título '{titulo}' para el album con id: {album_id}, ya existe" )
+      print ( f"El estudiante '{ApellidoPaterno}' '{ApellidoMaterno}' '{Nombres}' con el id: {estudiante_id}, ya existe" )
    session.close()
 
 
 
-def mostrar_album (album_id) :
+def mostrar_estudiante (estudiante_id) :
    # Crea la BD
    Base.metadata.create_all ( engine )
 
@@ -43,78 +43,72 @@ def mostrar_album (album_id) :
    session = Session ( )
    coleccion = Coleccion ( )
 
-   album=coleccion.dar_album_por_id(album_id)
+   estudiante=coleccion.dar_estudiante_por_id(estudiante_id)
    # print(album)
    print ( f"=======================================" )
-   print ( f"Id Album    : {album[ 'id' ]}" )
-   print ( f"Título Album: {album[ 'titulo' ]}" )
-   print ( f"Año         : {album[ 'anio' ]}" )
-   print ( f"Descripción : {album[ 'descripcion' ]}" )
-   print ( f"Medio       : {album[ 'medio' ]}" )
+   print ( f"Id Estudiante   : {estudiante[ 'id' ]}" )
+   print ( f"Apellido Paterno del Estudiante: {estudiante[ 'apellido paterno' ]}" )
+   print ( f"Apellido Materno del Estudiante: {estudiante[ 'apellido materno' ]}" )
+   print ( f"Nombres : {estudiante[ 'nombres' ]}" )
+   print ( f"Medio       : {estudiante[ 'medio' ]}" )
    print ( f"=======================================" )
    session.close()
 
 def Anadir_registros():
    # Crea la BD
-   Base.metadata.create_all ( engine )
+   Base.metadata.create_all(engine)
 
    # Abre la sesion
-   session = Session ( )
+   session = Session()
 
-   # crear interpretes
-   interprete1 = Interprete ( nombre = "Samuel Torres" , texto_curiosidades = "Es colombiano y vive en NY" )
-   interprete2 = Interprete ( nombre = "Aldo Gavilan" , texto_curiosidades = "Canto a Cuba" )
-   interprete3 = Interprete ( nombre = "Buena Vista Social club" )
-   interprete4 = Interprete ( nombre = "Arturo Sandoval" , texto_curiosidades = "No sabia quien era" )
-   session.add ( interprete1 )
-   session.add ( interprete2 )
-   session.add ( interprete3 )
-   session.add ( interprete4 )
-   session.commit ( )
+   # crear profesores
+   profesor1 = Profesor(ApellidoPaterno="Roni", ApellidoMaterno="Elias", Nombres="Maria")
+   profesor2 = Profesor(ApellidoPaterno="Quispe", ApellidoMaterno="Ticse", Nombres="Esteban")
+   profesor3 = Profesor(ApellidoPaterno="Rojas", ApellidoMaterno="Loes", Nombres="Alvaro")
+   profesor4 = Profesor(ApellidoPaterno="Ramires", ApellidoMaterno="Gonzales", Nombres="Ana")
+   session.add(profesor1)
+   session.add(profesor2)
+   session.add(profesor3)
+   session.add(profesor4)
+   session.commit()
 
-   # Crear albumes
-   album1 = Album ( titulo = "Latin Jazz Compilation" , anio = 2021 , descripcion = "Album original" , medio = Medio.DISCO )
-   album2 = Album ( titulo = "Bandas sonoras famosas" , anio = 2021 , descripcion = "Compilacion" , medio = Medio.DISCO )
-   session.add ( album1 )
-   session.add ( album2 )
+   # Crear estudiantes
+   estudiante1 = Estudiante(ApellidoPaterno="Lopez", ApellidoMaterno="Gonzales", Nombres="Esteban", medio=Medio.GRADO)
+   estudiante2 = Estudiante(ApellidoPaterno="Roman", ApellidoMaterno="Flores", Nombres="Jose", medio=Medio.GRADO)
+   session.add(estudiante1)
+   session.add(estudiante2)
 
-   # Crear canciones
-   cancion1 = Cancion ( titulo = "Ajiaco" , minutos = 3 , segundos = 1 , compositor = "Samuel Torres" )
-   cancion2 = Cancion ( titulo = "Forced Displacement" , minutos = 3 , segundos = 12 , compositor = "Desconocido" )
-   cancion3 = Cancion ( titulo = "Alegria" , minutos = 4 , segundos = 27 , compositor = "AU" )
-   session.add ( cancion1 )
-   session.add ( cancion2 )
-   session.add ( cancion3 )
+   # Crear secciones
+   seccion1 = Seccion(Nombre="GHGA", Cantidad=30, Tutor="Roman")
+   seccion2 = Seccion(Nombre="GHGB", Cantidad=35, Tutor="Samuel")
+   seccion3 = Seccion(Nombre="GHGC", Cantidad=45, Tutor="Felipe")
+   session.add(seccion1)
+   session.add(seccion2)
+   session.add(seccion3)
 
-   # Relacionar albumes con canciones
-   album1.canciones = [ cancion1 , cancion2 ]
-   album2.canciones = [ cancion1 , cancion3 ]
+   # Relacionar estudiantes con secciones
+   estudiante1.secciones = [seccion1, seccion2]
+   estudiante2.secciones = [seccion1, seccion2]
 
-   # Relacionar canciones con interpretes
-   cancion1.interpretes = [ interprete1 ]
-   cancion2.interpretes = [ interprete2 ]
-   cancion3.interpretes = [ interprete3 , interprete4 ]
-   session.commit ( )
+   # Relacionar secciones con profesores
+   seccion1.profesores = [profesor1]
+   seccion2.profesores = [profesor2]
+   seccion3.profesores = [profesor3, profesor4]
+   session.commit()
 
-   session.commit ( )
-   session.close ( )
+   session.commit()
+   session.close()
 
 if __name__ == '__main__':
    Anadir_registros ( )
 
-   anadir_album ( "Arde del cielo" , 2008 , "Album rock" , Medio.CD )
-   anadir_album ( "Similares" , 2015 , "Romantico" , Medio.CD )
-   anadir_album ( "Otherside" , 1999 , "Rock alternativo" , Medio.CD )
-   anadir_album ( "All the Little Lights" , 2012 , "Folk, Pop, Cantautor, Rock, Acoustic" , Medio.CD )
+   anadir_estudiante ( "Rojas" , "Alvares" , "Juan" , Medio.CD )
 
-   editar_album (2, "Similares",2020, "Romantico",Medio.CD)
-   editar_album ( 1 , "River flows in you ",2010 , "Romantico" , Medio.CD)
-
-   for i in [ 1 , 2 , 3, 4] :
-      mostrar_album ( i )
+   for i in [ 1 ] :
+      mostrar_estudiante ( i )
 
    i = 1
    while i <= 4:
-      mostrar_album(i)
+      mostrar_estudiante(i)
       i=i+1
 
